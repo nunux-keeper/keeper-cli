@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"runtime"
 	"text/template"
@@ -19,13 +19,14 @@ var versionTmpl = `Client:
 
 Server:
  Version:      {{.Server.Version}}
- API version:  {{.Server.APIVersion}}`
+ API version:  {{.Server.APIVersion}}
+`
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print client and server versions",
-	Run:   versionRun,
+	Short: "Print client and server versions.",
+	RunE:  versionRun,
 }
 
 type Version struct {
@@ -41,34 +42,30 @@ type VersionResponse struct {
 	Server *Version
 }
 
-func versionRun(cmd *cobra.Command, args []string) {
+func versionRun(cmd *cobra.Command, args []string) error {
 	vd := VersionResponse{
 		Client: &Version{
-			Version:    "1.0",
-			APIVersion: "2.0",
+			Version:    "1.0.0",
+			APIVersion: "2",
 			GoVersion:  runtime.Version(),
 			Os:         runtime.GOOS,
 			Arch:       runtime.GOARCH,
 		},
 	}
 
-	config := &api.Config{
-		ApiRoot: viper.GetString("api_uri"),
-	}
-
-	kClient, err := api.NewKeeperAPIClient(config)
+	kClient, err := api.NewKeeperAPIClient(viper.GetString("endpoint"))
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	serverInfo, err := kClient.GetApiInfo()
 	if err == nil {
 		vd.Server = &Version{
 			Version:    serverInfo.Version,
-			APIVersion: serverInfo.Version,
+			APIVersion: serverInfo.APIVersion,
 		}
 	} else {
-		log.Println(err)
+		fmt.Println(err)
 
 		vd.Server = &Version{
 			Version:    "n/a",
@@ -78,12 +75,10 @@ func versionRun(cmd *cobra.Command, args []string) {
 
 	tmpl, err := template.New("version").Parse(versionTmpl)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	err = tmpl.Execute(os.Stdout, vd)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
 func init() {

@@ -9,12 +9,23 @@ type KeeperAPIClient struct {
 	Config *Config
 }
 
-func NewKeeperAPIClient(c *Config) (*KeeperAPIClient, error) {
-	_, err := url.Parse(c.ApiRoot)
+func NewKeeperAPIClient(endpoint string) (*KeeperAPIClient, error) {
+	_, err := url.Parse(endpoint)
 	if err != nil {
-		return nil, fmt.Errorf("invalid servers URL %s: %s", c.ApiRoot, err)
+		return nil, fmt.Errorf("Invalid server endpoint %s: %s", endpoint, err)
 	}
+
+	creds, err := LoadTokenInfos()
+	if err != nil {
+		return nil, err
+	}
+
+	config := &Config{
+		Endpoint:    endpoint,
+		Credentials: creds,
+	}
+
 	return &KeeperAPIClient{
-		Config: c,
+		Config: config,
 	}, nil
 }

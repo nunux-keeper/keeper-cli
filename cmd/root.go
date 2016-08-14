@@ -3,13 +3,13 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
-var apiUri string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -38,11 +38,13 @@ func init() {
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.keeper-cli.yaml)")
-	RootCmd.PersistentFlags().StringVar(&apiUri, "api_uri", "https://api.nunux.org/keeper", "Uri of the API")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.keeper/config.yaml)")
+	RootCmd.PersistentFlags().String("endpoint", "https://api.nunux.org/keeper", "API endpoint")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	viper.BindPFlag("endpoint", RootCmd.PersistentFlags().Lookup("endpoint"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -51,13 +53,12 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName(".keeper-cli") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")       // adding home directory as first search path
-	viper.AutomaticEnv()               // read in environment variables that match
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.AddConfigPath(path.Join("$HOME", ".keeper"))
+	viper.AutomaticEnv()
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
-	viper.Set("api_uri", apiUri)
 }
