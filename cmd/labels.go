@@ -35,7 +35,7 @@ func labelsRun(cmd *cobra.Command, args []string) error {
 	w := new(tabwriter.Writer)
 	// Format in tab-separated columns with a tab stop of 8.
 	w.Init(os.Stdout, 0, 8, 1, '\t', 0)
-	fmt.Fprintln(w, "#\tLabel\tColor\tdate\t")
+	fmt.Fprintln(w, "#\tLabel\tColor\tDate\t")
 	for _, label := range labels {
 		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t\n", label.Id, label.Label, label.Color, label.Date)
 	}

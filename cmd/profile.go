@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var outputTmpl = `Profile:
+var profileTmpl = `Profile:
  UID:   {{.Uid}}
  Name:  {{.Name}}
  Date:  {{.Date}}
@@ -34,7 +34,7 @@ func profileRun(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	tmpl, err := template.New("profile").Parse(outputTmpl)
+	tmpl, err := template.New("profile").Parse(profileTmpl)
 	if err != nil {
 		return err
 	}
