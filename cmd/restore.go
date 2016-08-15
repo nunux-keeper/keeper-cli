@@ -10,24 +10,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-var DocumentTmpl = `Document:
- ID:          {{.Id}}
- Title:       {{.Title}}
- ContentType: {{.ContentType}}
- Content:     {{.Content}}
- Origin:      {{.Origin}}
- Date:        {{.Date}}
- Ghost:       {{.Ghost}}
-`
-
-// documentCmd represents the document command
-var documentCmd = &cobra.Command{
-	Use:   "document DOCID",
-	Short: "Get a document",
-	RunE:  documentRun,
+// restoreCmd represents the restore command
+var restoreCmd = &cobra.Command{
+	Use:   "restore",
+	Short: "Restore a deleted document",
+	RunE:  restoreDocumentRun,
 }
 
-func documentRun(cmd *cobra.Command, args []string) error {
+func restoreDocumentRun(cmd *cobra.Command, args []string) error {
 	if len(args) < 1 {
 		return errors.New("Document ID required.")
 	}
@@ -38,7 +28,7 @@ func documentRun(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	document, err := kClient.GetDocument(docid)
+	document, err := kClient.RestoreDocument(docid)
 	if err != nil {
 		return err
 	}
@@ -52,5 +42,5 @@ func documentRun(cmd *cobra.Command, args []string) error {
 }
 
 func init() {
-	RootCmd.AddCommand(documentCmd)
+	documentCmd.AddCommand(restoreCmd)
 }
