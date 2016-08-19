@@ -10,3 +10,4 @@ deploy:
     - release/keepctl-linux-arm
   on:
     repo: ncarlier/keeper-cli
+    tags: true
