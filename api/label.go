@@ -21,7 +21,7 @@ type LabelsResponse struct {
 	Labels []LabelResponse
 }
 
-func (k *KeeperAPIClient) GetLabels() ([]LabelResponse, error) {
+func (k *Client) GetLabels() ([]LabelResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err

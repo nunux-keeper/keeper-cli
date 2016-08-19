@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"os"
+	"io"
 	"text/template"
 
-	"github.com/ncarlier/keeper-cli/api"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+
+	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
 )
 
 var profileTmpl = `Profile:
@@ -16,20 +16,24 @@ var profileTmpl = `Profile:
  Admin: {{.Admin}}
 `
 
-// profileCmd represents the profile command
-var profileCmd = &cobra.Command{
-	Use:   "profile",
-	Short: "Get current user profile.",
-	RunE:  profileRun,
+func NewCmdProfile(f *cmdutil.Factory, out io.Writer) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "profile",
+		Short: "Get current user profile.",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runGetProfile(f, out, cmd)
+		},
+	}
+	return cmd
 }
 
-func profileRun(cmd *cobra.Command, args []string) error {
-	kClient, err := api.NewKeeperAPIClient(viper.GetString("endpoint"))
+func runGetProfile(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command) error {
+	c, err := f.Client()
 	if err != nil {
 		return err
 	}
 
-	userProfile, err := kClient.GetProfile()
+	userProfile, err := c.GetProfile()
 	if err != nil {
 		return err
 	}
@@ -38,10 +42,6 @@ func profileRun(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	err = tmpl.Execute(os.Stdout, userProfile)
+	err = tmpl.Execute(out, userProfile)
 	return err
-}
-
-func init() {
-	RootCmd.AddCommand(profileCmd)
 }

@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"io"
+
+	"github.com/spf13/cobra"
 
 	"github.com/ncarlier/keeper-cli/api"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
 )
 
 type loginOptions struct {
@@ -13,24 +15,34 @@ type loginOptions struct {
 	password string
 }
 
-var opts loginOptions
+func NewCmdLogin(f *cmdutil.Factory, out io.Writer) *cobra.Command {
+	var opts loginOptions
+	cmd := &cobra.Command{
+		Use:   "login",
+		Short: "Login to a Nunux Keeper instance",
+		Long: `Login to a Nunux Keeper instance.
+		If no server specified by the endpoint flag, the default is used.`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runLogin(f, out, cmd, &opts)
+		},
+	}
+	flags := cmd.Flags()
+	flags.StringVarP(&opts.user, "username", "u", "", "Username")
+	flags.StringVarP(&opts.password, "password", "p", "", "Password")
 
-// loginCmd represents the login command
-var loginCmd = &cobra.Command{
-	Use:   "login",
-	Short: "Login in to a Nunux Keeper instance.",
-	Long: `Login in to a Nunux Keeper instance.
-If no server specified by the endpoint flag, the default is used.`,
-	RunE: loginRun,
+	cmd.MarkFlagRequired("username")
+	cmd.MarkFlagRequired("password")
+
+	return cmd
 }
 
-func loginRun(cmd *cobra.Command, args []string) error {
-	kClient, err := api.NewKeeperAPIClient(viper.GetString("endpoint"))
+func runLogin(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, opts *loginOptions) error {
+	c, err := f.Client()
 	if err != nil {
 		return err
 	}
 
-	infos, err := kClient.Login(opts.user, opts.password)
+	infos, err := c.Login(opts.user, opts.password)
 	if err != nil {
 		return err
 	}
@@ -39,15 +51,6 @@ func loginRun(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("User %s logged.\n", opts.user)
+	fmt.Fprintf(out, "User %s logged.\n", opts.user)
 	return nil
-}
-
-func init() {
-	RootCmd.AddCommand(loginCmd)
-
-	flags := loginCmd.Flags()
-
-	flags.StringVarP(&opts.user, "username", "u", "", "Username")
-	flags.StringVarP(&opts.password, "password", "p", "", "Password")
 }

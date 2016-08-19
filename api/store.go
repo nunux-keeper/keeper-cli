@@ -40,11 +40,26 @@ func LoadTokenInfos() (*TokenInfos, error) {
 	}
 	filename := path.Join(usr.HomeDir, ".keeper", "creds.json")
 
-	file, e := ioutil.ReadFile(filename)
-	if e != nil {
-		return nil, err
+	if _, err := os.Stat(filename); err == nil {
+		file, e := ioutil.ReadFile(filename)
+		if e != nil {
+			return nil, err
+		}
+		var infos TokenInfos
+		err = json.Unmarshal(file, &infos)
+		return &infos, err
 	}
-	var infos TokenInfos
-	err = json.Unmarshal(file, &infos)
-	return &infos, err
+	return nil, nil
+}
+
+func RemoveTokenInfos() error {
+	usr, err := user.Current()
+	if err != nil {
+		return err
+	}
+	filename := path.Join(usr.HomeDir, ".keeper", "creds.json")
+	if _, err := os.Stat(filename); err == nil {
+		return os.Remove(filename)
+	}
+	return nil
 }

@@ -25,7 +25,7 @@ type DocumentsResponse struct {
 	Documents []DocumentResponse `json:"hits"`
 }
 
-func (k *KeeperAPIClient) GetDocuments() ([]DocumentResponse, error) {
+func (k *Client) GetDocuments() ([]DocumentResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (k *KeeperAPIClient) GetDocuments() ([]DocumentResponse, error) {
 	return result.Documents, err
 }
 
-func (k *KeeperAPIClient) GetDocument(docid string) (*DocumentResponse, error) {
+func (k *Client) GetDocument(docid string) (*DocumentResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (k *KeeperAPIClient) GetDocument(docid string) (*DocumentResponse, error) {
 	return &result, err
 }
 
-func (k *KeeperAPIClient) CreateDocument(doc *DocumentResponse) (*DocumentResponse, error) {
+func (k *Client) CreateDocument(doc *DocumentResponse) (*DocumentResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (k *KeeperAPIClient) CreateDocument(doc *DocumentResponse) (*DocumentRespon
 	return &result, err
 }
 
-func (k *KeeperAPIClient) RemoveDocument(docid string) error {
+func (k *Client) RemoveDocument(docid string) error {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return err
@@ -136,7 +136,7 @@ func (k *KeeperAPIClient) RemoveDocument(docid string) error {
 	return nil
 }
 
-func (k *KeeperAPIClient) RestoreDocument(docid string) (*DocumentResponse, error) {
+func (k *Client) RestoreDocument(docid string) (*DocumentResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err

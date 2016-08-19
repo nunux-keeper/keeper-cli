@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func (k *KeeperAPIClient) Login(username string, password string) (*TokenInfos, error) {
+func (k *Client) Login(username string, password string) (*TokenInfos, error) {
 	if username = strings.TrimSpace(username); username == "" {
 		return nil, errors.New("Username not specified.")
 	}

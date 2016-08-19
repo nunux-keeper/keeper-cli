@@ -12,7 +12,7 @@ Install
 Run the following command:
 
 ```bash
-> go get -v github.com/ncarlier/keeper-cli/keeper
+> go get -v github.com/ncarlier/keeper-cli/keepctl
 ```
 
 Or download the binary regarding your architecture.
@@ -20,10 +20,10 @@ Or download the binary regarding your architecture.
 Usage
 -----
 
-Just type `keeper-cli` to see available commands.
+Just type `keepctl` to see available commands.
 
 
 ```bash
 
-> keeper-cli
+> keepctl
 ```

@@ -2,16 +2,16 @@ package cmd
 
 import (
 	"fmt"
-	"os"
+	"io"
 	"runtime"
 	"text/template"
 
-	"github.com/ncarlier/keeper-cli/api"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+
+	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
 )
 
-var versionTmpl = `Client:
+const versionTmpl = `Client:
  Version:      {{.Client.Version}}
  API version:  {{.Client.APIVersion}}
  Go version:   {{.Client.GoVersion}}
@@ -21,13 +21,6 @@ Server:
  Version:      {{.Server.Version}}
  API version:  {{.Server.APIVersion}}
 `
-
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print client and server versions.",
-	RunE:  versionRun,
-}
 
 type Version struct {
 	Version    string
@@ -42,7 +35,18 @@ type VersionResponse struct {
 	Server *Version
 }
 
-func versionRun(cmd *cobra.Command, args []string) error {
+func NewCmdVersion(f *cmdutil.Factory, out io.Writer) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "version",
+		Short: "Print the client and server version information",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runVersion(f, out, cmd)
+		},
+	}
+	return cmd
+}
+
+func runVersion(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command) error {
 	vd := VersionResponse{
 		Client: &Version{
 			Version:    "1.0.0",
@@ -53,20 +57,19 @@ func versionRun(cmd *cobra.Command, args []string) error {
 		},
 	}
 
-	kClient, err := api.NewKeeperAPIClient(viper.GetString("endpoint"))
+	c, err := f.Client()
 	if err != nil {
 		return err
 	}
 
-	serverInfo, err := kClient.GetApiInfo()
+	serverInfo, err := c.GetApiInfo()
 	if err == nil {
 		vd.Server = &Version{
 			Version:    serverInfo.Version,
 			APIVersion: serverInfo.APIVersion,
 		}
 	} else {
-		fmt.Println(err)
-
+		fmt.Fprintf(out, "Error: %v", err)
 		vd.Server = &Version{
 			Version:    "n/a",
 			APIVersion: "n/a",
@@ -77,10 +80,6 @@ func versionRun(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	err = tmpl.Execute(os.Stdout, vd)
+	err = tmpl.Execute(out, vd)
 	return err
-}
-
-func init() {
-	RootCmd.AddCommand(versionCmd)
 }

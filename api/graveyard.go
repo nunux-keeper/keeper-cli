@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func (k *KeeperAPIClient) GetGraveyard() ([]DocumentResponse, error) {
+func (k *Client) GetGraveyard() ([]DocumentResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (k *KeeperAPIClient) GetGraveyard() ([]DocumentResponse, error) {
 	return result.Documents, err
 }
 
-func (k *KeeperAPIClient) EmptyGraveyard() error {
+func (k *Client) EmptyGraveyard() error {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (k *KeeperAPIClient) EmptyGraveyard() error {
 	return nil
 }
 
-func (k *KeeperAPIClient) DestroyDocument(docid string) error {
+func (k *Client) DestroyDocument(docid string) error {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return err

@@ -16,7 +16,7 @@ type ProfileResponse struct {
 	Uid   string `json:uid`
 }
 
-func (k *KeeperAPIClient) GetProfile() (*ProfileResponse, error) {
+func (k *Client) GetProfile() (*ProfileResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err

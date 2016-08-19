@@ -20,7 +20,7 @@ type InfoResponse struct {
 	} `json:"_links"`
 }
 
-func (k *KeeperAPIClient) GetApiInfo() (*InfoResponse, error) {
+func (k *Client) GetApiInfo() (*InfoResponse, error) {
 	r, err := http.Get(k.Config.Endpoint)
 	if err != nil {
 		return nil, err

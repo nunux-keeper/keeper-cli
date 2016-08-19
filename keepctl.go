@@ -14,8 +14,17 @@
 
 package main
 
-import "github.com/ncarlier/keeper-cli/cmd"
+import (
+	"os"
+
+	"github.com/ncarlier/keeper-cli/cmd"
+	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
+)
 
 func main() {
-	cmd.Execute()
+	cmd := cmd.NewKeepctlCommand(cmdutil.NewFactory(), os.Stdin, os.Stdout, os.Stderr)
+	if err := cmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+	os.Exit(0)
 }

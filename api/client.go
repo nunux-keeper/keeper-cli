@@ -5,11 +5,11 @@ import (
 	"net/url"
 )
 
-type KeeperAPIClient struct {
+type Client struct {
 	Config *Config
 }
 
-func NewKeeperAPIClient(endpoint string) (*KeeperAPIClient, error) {
+func NewNunuxKeeperClient(endpoint string) (*Client, error) {
 	_, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid server endpoint %s: %s", endpoint, err)
@@ -25,7 +25,7 @@ func NewKeeperAPIClient(endpoint string) (*KeeperAPIClient, error) {
 		Credentials: creds,
 	}
 
-	return &KeeperAPIClient{
+	return &Client{
 		Config: config,
 	}, nil
 }
