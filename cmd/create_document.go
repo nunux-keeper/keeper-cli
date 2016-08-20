@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"bufio"
+	"bytes"
 	"errors"
 	"io"
+	"os"
 	"text/template"
 
 	"github.com/spf13/cobra"
@@ -11,25 +14,43 @@ import (
 	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
 )
 
+type createOptions struct {
+	stdin   bool
+	title   string
+	content string
+	url     string
+}
+
 func NewCmdCreateDocument(f *cmdutil.Factory, out io.Writer) *cobra.Command {
-	var doc api.DocumentResponse
+	var opts createOptions
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a document",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runCreateDocument(f, out, cmd, &doc)
+			return runCreateDocument(f, out, cmd, &opts)
 		},
 	}
 
 	flags := cmd.Flags()
-	flags.StringVarP(&doc.Title, "title", "t", "", "Document title")
-	flags.StringVarP(&doc.Content, "content", "c", "", "Document content")
-	flags.StringVarP(&doc.Origin, "url", "u", "", "Document URL")
+	flags.StringVarP(&opts.title, "title", "t", "", "Document title")
+	flags.StringVarP(&opts.content, "content", "c", "", "Document content")
+	flags.StringVarP(&opts.url, "url", "u", "", "Document URL")
 	return cmd
 }
 
-func runCreateDocument(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, doc *api.DocumentResponse) error {
-	if doc.Title == "" && doc.Content == "" && doc.Origin == "" {
+func runCreateDocument(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, opts *createOptions) error {
+	var content string
+	fi, _ := os.Stdin.Stat()
+	if fi.Mode()&os.ModeNamedPipe == 0 {
+		content = opts.content
+	} else {
+		reader := bufio.NewReader(os.Stdin)
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(reader)
+		content = buf.String()
+	}
+
+	if !opts.stdin && opts.title == "" && content == "" && opts.url == "" {
 		return errors.New("You have to specify at least a title, a content or an url.")
 	}
 
@@ -38,6 +59,11 @@ func runCreateDocument(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, do
 		return err
 	}
 
+	doc := &api.DocumentResponse{
+		Title:   opts.title,
+		Content: content,
+		Origin:  opts.url,
+	}
 	document, err := c.CreateDocument(doc)
 	if err != nil {
 		return err
