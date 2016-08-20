@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ncarlier/keeper-cli.svg?branch=master)](https://travis-ci.org/ncarlier/keeper-cli)
+
 keeper-cli
 ==========
 
