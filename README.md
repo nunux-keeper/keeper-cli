@@ -20,7 +20,7 @@ Run the following command:
 Or download the binary regarding your architecture:
 
 ```bash
-> sudo curl -s raw.githubusercontent.com/ncarlier/keeper-cli/master/install.sh | sh
+> sudo curl -s https://raw.githubusercontent.com/ncarlier/keeper-cli/master/install.sh | sh
 ```
 
 Usage
