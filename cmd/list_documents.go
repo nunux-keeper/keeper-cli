@@ -12,6 +12,10 @@ import (
 
 type listOptions struct {
 	noHeaders bool
+	inverted  bool
+	query     string
+	size      int
+	from      int
 }
 
 func NewCmdListDocuments(f *cmdutil.Factory, out io.Writer) *cobra.Command {
@@ -26,6 +30,10 @@ func NewCmdListDocuments(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	}
 	flags := cmd.Flags()
 	flags.BoolVar(&opts.noHeaders, "no-headers", false, "Hide headers")
+	flags.BoolVar(&opts.inverted, "invert", false, "Invert order (from oldest)")
+	flags.StringVarP(&opts.query, "query", "q", "", "Query search")
+	flags.IntVarP(&opts.size, "size", "s", 50, "Result size limit (default: 50)")
+	flags.IntVarP(&opts.from, "from", "f", 0, "Result begin index (default: 0)")
 
 	return cmd
 }
@@ -36,7 +44,12 @@ func runListDocuments(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, opt
 		return err
 	}
 
-	documents, err := c.GetDocuments()
+	order := "desc"
+	if opts.inverted {
+		order = "asc"
+	}
+
+	documents, err := c.GetDocuments(opts.query, order, opts.size, opts.from)
 	if err != nil {
 		return err
 	}

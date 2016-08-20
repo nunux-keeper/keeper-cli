@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 type DocumentResponse struct {
@@ -25,7 +26,7 @@ type DocumentsResponse struct {
 	Documents []DocumentResponse `json:"hits"`
 }
 
-func (k *Client) GetDocuments() ([]DocumentResponse, error) {
+func (k *Client) GetDocuments(query string, order string, size int, from int) ([]DocumentResponse, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err
@@ -37,6 +38,16 @@ func (k *Client) GetDocuments() ([]DocumentResponse, error) {
 		return nil, err
 	}
 	req.Header.Add("Authorization", "Bearer "+accessToken)
+
+	q := req.URL.Query()
+	q.Add("size", strconv.Itoa(size))
+	q.Add("from", strconv.Itoa(from))
+	q.Add("order", order)
+	if query != "" {
+		q.Add("q", query)
+	}
+	req.URL.RawQuery = q.Encode()
+
 	res, err := client.Do(req)
 	if err != nil {
 		return nil, err
