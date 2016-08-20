@@ -17,7 +17,11 @@ Run the following command:
 > go get -v github.com/ncarlier/keeper-cli/keepctl
 ```
 
-Or download the binary regarding your architecture.
+Or download the binary regarding your architecture:
+
+```bash
+> sudo curl -s raw.githubusercontent.com/ncarlier/keeper-cli/master/install.sh | sh
+```
 
 Usage
 -----
