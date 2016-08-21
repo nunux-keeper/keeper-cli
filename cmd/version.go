@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 
 	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
+	"github.com/ncarlier/keeper-cli/version"
 )
 
 const versionTmpl = `Client:
@@ -49,8 +50,8 @@ func NewCmdVersion(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 func runVersion(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command) error {
 	vd := VersionResponse{
 		Client: &Version{
-			Version:    "1.0.0",
-			APIVersion: "2",
+			Version:    version.App,
+			APIVersion: version.Api,
 			GoVersion:  runtime.Version(),
 			Os:         runtime.GOOS,
 			Arch:       runtime.GOARCH,
