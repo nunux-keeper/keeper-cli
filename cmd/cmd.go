@@ -64,15 +64,37 @@ func NewKeepctlCommand(f *cmdutil.Factory, in io.Reader, out, err io.Writer) *co
 	cmds.AddCommand(NewCmdLogin(f, out))
 	cmds.AddCommand(NewCmdLogout(f, out))
 	cmds.AddCommand(NewCmdProfile(f, out))
-	cmds.AddCommand(NewCmdGetDocument(f, out))
-	cmds.AddCommand(NewCmdCreateDocument(f, out))
-	cmds.AddCommand(NewCmdRemoveDocument(f, out))
-	cmds.AddCommand(NewCmdRestoreDocument(f, out))
+
+	// get
+	cmd_get := NewCmdGetDocument(f, out)
+	cmd_get.AddCommand(NewCmdGetLabel(f, out))
+	cmds.AddCommand(cmd_get)
+
+	// create
+	cmd_create := NewCmdCreateDocument(f, out)
+	cmd_create.AddCommand(NewCmdCreateLabel(f, out))
+	cmds.AddCommand(cmd_create)
+
+	// rm
+	cmd_rm := NewCmdRemoveDocument(f, out)
+	cmd_rm.AddCommand(NewCmdRemoveLabel(f, out))
+	cmds.AddCommand(cmd_rm)
+
+	// restore
+	cmd_re := NewCmdRestoreDocument(f, out)
+	cmd_re.AddCommand(NewCmdRestoreLabel(f, out))
+	cmds.AddCommand(cmd_re)
+
+	// destroy
 	cmds.AddCommand(NewCmdDestroyDocument(f, out))
-	cmdList := NewCmdListDocuments(f, out)
-	cmdList.AddCommand(NewCmdListTrash(f, out))
-	cmdList.AddCommand(NewCmdListLabels(f, out))
-	cmds.AddCommand(cmdList)
+
+	//ls
+	cmd_ls := NewCmdListDocuments(f, out)
+	cmd_ls.AddCommand(NewCmdListTrash(f, out))
+	cmd_ls.AddCommand(NewCmdListLabels(f, out))
+	cmds.AddCommand(cmd_ls)
+
+	// empty
 	cmds.AddCommand(NewCmdEmptyTrash(f, out))
 
 	return cmds

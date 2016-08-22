@@ -23,7 +23,7 @@ var DocumentTmpl = `Document:
  Ghost:       {{.Ghost}}
 `
 
-type getOptions struct {
+type getDocumentOptions struct {
 	attribute string
 }
 
@@ -34,10 +34,10 @@ func getField(d *api.DocumentResponse, field string) string {
 }
 
 func NewCmdGetDocument(f *cmdutil.Factory, out io.Writer) *cobra.Command {
-	var opts getOptions
+	var opts getDocumentOptions
 	cmd := &cobra.Command{
 		Use:   "get (ID)",
-		Short: "Get a document",
+		Short: "Get a document (by default) or a label",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 1 {
 				return errors.New("Document ID required.")
@@ -55,7 +55,7 @@ func NewCmdGetDocument(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	return cmd
 }
 
-func runGetDocument(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, docid string, opts *getOptions) error {
+func runGetDocument(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, docid string, opts *getDocumentOptions) error {
 	c, err := f.Client()
 	if err != nil {
 		return err

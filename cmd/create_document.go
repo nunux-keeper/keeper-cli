@@ -15,7 +15,6 @@ import (
 )
 
 type createOptions struct {
-	stdin   bool
 	title   string
 	content string
 	url     string
@@ -50,7 +49,7 @@ func runCreateDocument(f *cmdutil.Factory, out io.Writer, cmd *cobra.Command, op
 		content = buf.String()
 	}
 
-	if !opts.stdin && opts.title == "" && content == "" && opts.url == "" {
+	if opts.title == "" && content == "" && opts.url == "" {
 		return errors.New("You have to specify at least a title, a content or an url.")
 	}
 
