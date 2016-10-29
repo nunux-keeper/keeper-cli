@@ -8,6 +8,8 @@ CLI.
 
 Please note that this CLI is not compatible with Nunux Keeper V1.
 
+![Screenshot](screenshot.png)
+
 Install
 -------
 
