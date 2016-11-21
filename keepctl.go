@@ -17,8 +17,8 @@ package main
 import (
 	"os"
 
-	"github.com/ncarlier/keeper-cli/cmd"
-	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
+	"github.com/nunux-keeper/keeper-cli/cmd"
+	cmdutil "github.com/nunux-keeper/keeper-cli/cmd/util"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-package = github.com/ncarlier/keeper-cli
+package = github.com/nunux-keeper/keeper-cli
 name = keepctl
 
 .PHONY: release

@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
-	"github.com/ncarlier/keeper-cli/version"
+	cmdutil "github.com/nunux-keeper/keeper-cli/cmd/util"
+	"github.com/nunux-keeper/keeper-cli/version"
 )
 
 const versionTmpl = `Client:

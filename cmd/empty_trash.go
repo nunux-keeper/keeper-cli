@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
+	cmdutil "github.com/nunux-keeper/keeper-cli/cmd/util"
 )
 
 func NewCmdEmptyTrash(f *cmdutil.Factory, out io.Writer) *cobra.Command {

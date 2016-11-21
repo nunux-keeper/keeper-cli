@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
+	cmdutil "github.com/nunux-keeper/keeper-cli/cmd/util"
 )
 
 const bash_completion_func = `# call keepctl get $1,

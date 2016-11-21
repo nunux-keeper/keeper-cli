@@ -3,7 +3,7 @@ package util
 import (
 	"github.com/spf13/viper"
 
-	"github.com/ncarlier/keeper-cli/api"
+	"github.com/nunux-keeper/keeper-cli/api"
 )
 
 type Factory struct {

@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ncarlier/keeper-cli/api"
-	cmdutil "github.com/ncarlier/keeper-cli/cmd/util"
+	"github.com/nunux-keeper/keeper-cli/api"
+	cmdutil "github.com/nunux-keeper/keeper-cli/cmd/util"
 )
 
 func NewCmdLogout(f *cmdutil.Factory, out io.Writer) *cobra.Command {
