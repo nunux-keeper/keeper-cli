@@ -32,8 +32,8 @@ func NewCmdListDocuments(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	flags.BoolVar(&opts.noHeaders, "no-headers", false, "Hide headers")
 	flags.BoolVar(&opts.inverted, "invert", false, "Invert order (from oldest)")
 	flags.StringVarP(&opts.query, "query", "q", "", "Query search")
-	flags.IntVarP(&opts.size, "size", "s", 50, "Result size limit (default: 50)")
-	flags.IntVarP(&opts.from, "from", "f", 0, "Result begin index (default: 0)")
+	flags.IntVarP(&opts.size, "size", "s", 50, "Result size limit")
+	flags.IntVarP(&opts.from, "from", "f", 0, "Result begin index")
 
 	return cmd
 }
