@@ -9,5 +9,5 @@ deploy:
     - release/keepctl-linux-amd64
     - release/keepctl-linux-arm
   on:
-    repo: ncarlier/keeper-cli
+    repo: nunux-keeper/keeper-cli
     tags: true
