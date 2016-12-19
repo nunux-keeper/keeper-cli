@@ -23,7 +23,7 @@ func (k *Client) GetProfile() (*ProfileResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/profile", nil)
+	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/profiles/current", nil)
 	if err != nil {
 		return nil, err
 	}

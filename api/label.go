@@ -30,7 +30,7 @@ func (k *Client) GetLabels() ([]LabelResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/label", nil)
+	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/labels", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (k *Client) GetLabel(id string) (*LabelResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/label/"+id, nil)
+	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/labels/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func (k *Client) CreateLabel(label *LabelResponse) (*LabelResponse, error) {
 	fmt.Fprintf(os.Stdout, "Posting: %s", b)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/label", b)
+	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/labels", b)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (k *Client) RemoveLabel(id string) error {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/label/"+id, nil)
+	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/labels/"+id, nil)
 	if err != nil {
 		return err
 	}
@@ -141,7 +141,7 @@ func (k *Client) RestoreLabel(id string) (*LabelResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/label/"+id+"/restore", nil)
+	req, err := http.NewRequest("PUT", k.Config.Endpoint+"/v2/graveyard/labels/"+id, nil)
 	if err != nil {
 		return nil, err
 	}

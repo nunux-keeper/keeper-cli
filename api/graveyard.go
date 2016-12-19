@@ -15,7 +15,7 @@ func (k *Client) GetGraveyard() ([]DocumentResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/graveyard", nil)
+	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/graveyard/documents", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (k *Client) EmptyGraveyard() error {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/graveyard", nil)
+	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/graveyard/documents", nil)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (k *Client) DestroyDocument(docid string) error {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/graveyard/"+docid, nil)
+	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/graveyard/documents/"+docid, nil)
 	if err != nil {
 		return err
 	}

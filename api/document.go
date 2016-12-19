@@ -33,7 +33,7 @@ func (k *Client) GetDocuments(query string, order string, size int, from int) ([
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/document", nil)
+	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/documents", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (k *Client) GetDocument(docid string) (*DocumentResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/document/"+docid, nil)
+	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/documents/"+docid, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (k *Client) CreateDocument(doc *DocumentResponse) (*DocumentResponse, error
 	fmt.Fprintf(os.Stdout, "Posting: %s", b)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/document", b)
+	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/documents", b)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (k *Client) RemoveDocument(docid string) error {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/document/"+docid, nil)
+	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/documents/"+docid, nil)
 	if err != nil {
 		return err
 	}
@@ -154,7 +154,7 @@ func (k *Client) RestoreDocument(docid string) (*DocumentResponse, error) {
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/document/"+docid+"/restore", nil)
+	req, err := http.NewRequest("PUT", k.Config.Endpoint+"/v2/graveyard/documents/"+docid, nil)
 	if err != nil {
 		return nil, err
 	}
