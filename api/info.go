@@ -9,7 +9,7 @@ type Href struct {
 	Href string `json:href`
 }
 
-type InfoResponse struct {
+type ApiInfoResponse struct {
 	Name        string `json:name`
 	Description string `json:description`
 	Version     string `json:version`
@@ -20,14 +20,14 @@ type InfoResponse struct {
 	} `json:"_links"`
 }
 
-func (k *Client) GetApiInfo() (*InfoResponse, error) {
+func (k *Client) GetApiInfo() (*ApiInfoResponse, error) {
 	r, err := http.Get(k.Config.Endpoint)
 	if err != nil {
 		return nil, err
 	}
 	defer r.Body.Close()
 
-	var result InfoResponse
+	var result ApiInfoResponse
 	err = json.NewDecoder(r.Body).Decode(&result)
 	return &result, err
 }
