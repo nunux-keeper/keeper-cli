@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"net/http"
 	"os"
 )
 
@@ -25,18 +24,7 @@ type ServerInfosResponse struct {
 }
 
 func (k *Client) GetServerInfos() (*ServerInfosResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/admin/infos", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/admin/infos", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -52,18 +40,7 @@ func (k *Client) GetServerInfos() (*ServerInfosResponse, error) {
 }
 
 func (k *Client) GetUsers() ([]UserResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/admin/users", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/admin/users", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -79,18 +56,7 @@ func (k *Client) GetUsers() ([]UserResponse, error) {
 }
 
 func (k *Client) GetUser(uid string) (*UserResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/admin/users/"+uid, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/admin/users/"+uid, nil)
 	if err != nil {
 		return nil, err
 	}

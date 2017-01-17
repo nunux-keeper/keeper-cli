@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 )
@@ -27,28 +27,15 @@ type DocumentsResponse struct {
 }
 
 func (k *Client) GetDocuments(query string, order string, size int, from int) ([]DocumentResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/documents", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-
-	q := req.URL.Query()
+	q := make(url.Values)
 	q.Add("size", strconv.Itoa(size))
 	q.Add("from", strconv.Itoa(from))
 	q.Add("order", order)
 	if query != "" {
 		q.Add("q", query)
 	}
-	req.URL.RawQuery = q.Encode()
 
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/documents", &q)
 	if err != nil {
 		return nil, err
 	}
@@ -64,18 +51,7 @@ func (k *Client) GetDocuments(query string, order string, size int, from int) ([
 }
 
 func (k *Client) GetDocument(docid string) (*DocumentResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/documents/"+docid, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/documents/"+docid, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -91,24 +67,11 @@ func (k *Client) GetDocument(docid string) (*DocumentResponse, error) {
 }
 
 func (k *Client) CreateDocument(doc *DocumentResponse) (*DocumentResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(doc)
 	fmt.Fprintf(os.Stdout, "Posting: %s", b)
 
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/documents", b)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	req.Header.Set("Content-Type", "application/json")
-
-	res, err := client.Do(req)
+	res, err := k.Post("/v2/documents", b)
 	if err != nil {
 		return nil, err
 	}
@@ -124,18 +87,7 @@ func (k *Client) CreateDocument(doc *DocumentResponse) (*DocumentResponse, error
 }
 
 func (k *Client) RemoveDocument(docid string) error {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/documents/"+docid, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Delete("/v2/documents/"+docid, nil)
 	if err != nil {
 		return err
 	}
@@ -148,18 +100,7 @@ func (k *Client) RemoveDocument(docid string) error {
 }
 
 func (k *Client) RestoreDocument(docid string) (*DocumentResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("PUT", k.Config.Endpoint+"/v2/graveyard/documents/"+docid, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Put("/v2/graveyard/documents/"+docid, nil)
 	if err != nil {
 		return nil, err
 	}

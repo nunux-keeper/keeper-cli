@@ -4,23 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"net/http"
 	"os"
 )
 
 func (k *Client) GetGraveyard() ([]DocumentResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/graveyard/documents", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/graveyard/documents", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -36,18 +24,7 @@ func (k *Client) GetGraveyard() ([]DocumentResponse, error) {
 }
 
 func (k *Client) EmptyGraveyard() error {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/graveyard/documents", nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Delete("/v2/graveyard/documents", nil)
 	if err != nil {
 		return err
 	}
@@ -60,18 +37,7 @@ func (k *Client) EmptyGraveyard() error {
 }
 
 func (k *Client) DestroyDocument(docid string) error {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/graveyard/documents/"+docid, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Delete("/v2/graveyard/documents/"+docid, nil)
 	if err != nil {
 		return err
 	}

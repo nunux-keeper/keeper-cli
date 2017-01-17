@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"net/http"
 	"os"
 )
 
@@ -17,18 +16,7 @@ type ProfileResponse struct {
 }
 
 func (k *Client) GetProfile() (*ProfileResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/profiles/current", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/profiles/current", nil)
 	if err != nil {
 		return nil, err
 	}

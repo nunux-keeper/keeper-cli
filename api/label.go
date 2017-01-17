@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 )
 
@@ -24,18 +23,7 @@ type LabelsResponse struct {
 }
 
 func (k *Client) GetLabels() ([]LabelResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/labels", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/labels", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -51,18 +39,7 @@ func (k *Client) GetLabels() ([]LabelResponse, error) {
 }
 
 func (k *Client) GetLabel(id string) (*LabelResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", k.Config.Endpoint+"/v2/labels/"+id, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Get("/v2/labels/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -78,24 +55,11 @@ func (k *Client) GetLabel(id string) (*LabelResponse, error) {
 }
 
 func (k *Client) CreateLabel(label *LabelResponse) (*LabelResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(label)
 	fmt.Fprintf(os.Stdout, "Posting: %s", b)
 
-	client := &http.Client{}
-	req, err := http.NewRequest("POST", k.Config.Endpoint+"/v2/labels", b)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	req.Header.Set("Content-Type", "application/json")
-
-	res, err := client.Do(req)
+	res, err := k.Post("/v2/labels/", b)
 	if err != nil {
 		return nil, err
 	}
@@ -111,18 +75,7 @@ func (k *Client) CreateLabel(label *LabelResponse) (*LabelResponse, error) {
 }
 
 func (k *Client) RemoveLabel(id string) error {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", k.Config.Endpoint+"/v2/labels/"+id, nil)
-	if err != nil {
-		return err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Delete("/v2/labels/"+id, nil)
 	if err != nil {
 		return err
 	}
@@ -135,18 +88,7 @@ func (k *Client) RemoveLabel(id string) error {
 }
 
 func (k *Client) RestoreLabel(id string) (*LabelResponse, error) {
-	accessToken, err := GetAccessToken(k.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{}
-	req, err := http.NewRequest("PUT", k.Config.Endpoint+"/v2/graveyard/labels/"+id, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	res, err := client.Do(req)
+	res, err := k.Put("/v2/graveyard/labels/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
