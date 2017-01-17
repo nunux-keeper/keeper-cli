@@ -17,7 +17,7 @@ var serverInfosTmpl = `Server informations:
 func NewCmdInfos(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "infos",
-		Short: "Get server informations (Admin role).",
+		Short: "Get server informations (ADMIN)",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runGetServerInfos(f, out, cmd)
 		},

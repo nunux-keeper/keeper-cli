@@ -19,7 +19,7 @@ var profileTmpl = `Profile:
 func NewCmdProfile(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "profile",
-		Short: "Get current user profile.",
+		Short: "Get current user profile",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runGetProfile(f, out, cmd)
 		},

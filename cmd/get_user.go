@@ -24,7 +24,7 @@ var UserTmpl = `User:
 func NewCmdGetUser(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "user (UID)",
-		Short: "Get user details",
+		Short: "Get user details (ADMIN)",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 1 {
 				return errors.New("User ID required.")

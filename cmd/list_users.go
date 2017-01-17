@@ -13,7 +13,7 @@ import (
 func NewCmdListUsers(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "users",
-		Short: "List users",
+		Short: "List users (ADMIN)",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runListUsers(f, out, cmd)
 		},
