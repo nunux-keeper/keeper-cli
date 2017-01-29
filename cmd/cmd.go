@@ -61,20 +61,26 @@ func NewKeepctlCommand(f *cmdutil.Factory, in io.Reader, out, err io.Writer) *co
 	cobra.OnInitialize(initConfig)
 
 	cmds.AddCommand(NewCmdVersion(f, out))
-	cmds.AddCommand(NewCmdInfos(f, out))
 	cmds.AddCommand(NewCmdLogin(f, out))
 	cmds.AddCommand(NewCmdLogout(f, out))
 	cmds.AddCommand(NewCmdProfile(f, out))
+
+	// infos
+	cmd_infos := NewCmdInfos(f, out)
+	cmd_infos.AddCommand(NewCmdInfosJobs(f, out))
+	cmds.AddCommand(cmd_infos)
 
 	// get
 	cmd_get := NewCmdGetDocument(f, out)
 	cmd_get.AddCommand(NewCmdGetLabel(f, out))
 	cmd_get.AddCommand(NewCmdGetUser(f, out))
+	cmd_get.AddCommand(NewCmdGetJob(f, out))
 	cmds.AddCommand(cmd_get)
 
 	// create
 	cmd_create := NewCmdCreateDocument(f, out)
 	cmd_create.AddCommand(NewCmdCreateLabel(f, out))
+	cmd_create.AddCommand(NewCmdCreateJob(f, out))
 	cmds.AddCommand(cmd_create)
 
 	// rm

@@ -42,12 +42,12 @@ func (k *Client) Delete(url string, query *url.Values) (*http.Response, error) {
 	return k.Do("DELETE", url, query, nil)
 }
 
-func (k *Client) Post(url string, body io.Reader) (*http.Response, error) {
-	return k.Do("POST", url, nil, body)
+func (k *Client) Post(url string, query *url.Values, body io.Reader) (*http.Response, error) {
+	return k.Do("POST", url, query, body)
 }
 
-func (k *Client) Put(url string, body io.Reader) (*http.Response, error) {
-	return k.Do("PUT", url, nil, body)
+func (k *Client) Put(url string, query *url.Values, body io.Reader) (*http.Response, error) {
+	return k.Do("PUT", url, query, body)
 }
 
 func NewNunuxKeeperClient(endpoint string) (*Client, error) {

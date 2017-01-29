@@ -19,7 +19,7 @@ type loginOptions struct {
 func NewCmdLogin(f *cmdutil.Factory, out io.Writer) *cobra.Command {
 	var opts loginOptions
 	cmd := &cobra.Command{
-		Use:   "login <uid> [options]",
+		Use:   "login <uid>",
 		Short: "Login to a Nunux Keeper instance",
 		Long: `Login to a Nunux Keeper instance.
 		If no server specified by the endpoint flag, the default is used.`,

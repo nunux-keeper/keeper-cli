@@ -71,7 +71,7 @@ func (k *Client) CreateDocument(doc *DocumentResponse) (*DocumentResponse, error
 	json.NewEncoder(b).Encode(doc)
 	fmt.Fprintf(os.Stdout, "Posting: %s", b)
 
-	res, err := k.Post("/v2/documents", b)
+	res, err := k.Post("/v2/documents", nil, b)
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (k *Client) RemoveDocument(docid string) error {
 }
 
 func (k *Client) RestoreDocument(docid string) (*DocumentResponse, error) {
-	res, err := k.Put("/v2/graveyard/documents/"+docid, nil)
+	res, err := k.Put("/v2/graveyard/documents/"+docid, nil, nil)
 	if err != nil {
 		return nil, err
 	}

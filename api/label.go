@@ -59,7 +59,7 @@ func (k *Client) CreateLabel(label *LabelResponse) (*LabelResponse, error) {
 	json.NewEncoder(b).Encode(label)
 	fmt.Fprintf(os.Stdout, "Posting: %s", b)
 
-	res, err := k.Post("/v2/labels/", b)
+	res, err := k.Post("/v2/labels/", nil, b)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func (k *Client) RemoveLabel(id string) error {
 }
 
 func (k *Client) RestoreLabel(id string) (*LabelResponse, error) {
-	res, err := k.Put("/v2/graveyard/labels/"+id, nil)
+	res, err := k.Put("/v2/graveyard/labels/"+id, nil, nil)
 	if err != nil {
 		return nil, err
 	}
