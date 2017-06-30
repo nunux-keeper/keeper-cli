@@ -1,0 +1,6 @@
+package: github.com/nunux-keeper/keeper-cli
+import:
+- package: github.com/bgentry/speakeasy
+  version: ^0.1.0
+- package: github.com/spf13/cobra
+- package: github.com/spf13/viper

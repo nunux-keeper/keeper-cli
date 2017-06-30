@@ -11,59 +11,88 @@ type Client struct {
 	Config *Config
 }
 
-func (k *Client) Do(method string, url string, query *url.Values, body io.Reader) (*http.Response, error) {
+type Request struct {
+	Method string
+	Url    string
+	Query  *url.Values
+	Body   io.Reader
+	Form   *url.Values
+}
+
+// Do HTTP request
+func (k *Client) Do(r *Request) (*http.Response, error) {
 	accessToken, err := GetAccessToken(k.Config)
 	if err != nil {
 		return nil, err
 	}
 
 	client := &http.Client{}
-	req, err := http.NewRequest(method, k.Config.Endpoint+url, body)
+	req, err := http.NewRequest(r.Method, k.Config.Endpoint+r.Url, r.Body)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorization", "Bearer "+accessToken)
-	if method == "POST" || method == "PUT" {
+
+	if accessToken != "" {
+		req.Header.Add("Authorization", "Bearer "+accessToken)
+	}
+
+	if r.Method == "POST" && r.Form != nil {
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	} else if r.Method == "POST" || r.Method == "PUT" {
 		req.Header.Set("Content-Type", "application/json")
 	}
 
-	if query != nil {
-		req.URL.RawQuery = query.Encode()
+	if r.Query != nil {
+		req.URL.RawQuery = r.Query.Encode()
 	}
 
 	return client.Do(req)
 }
 
+// Get Trigger HTTP GET
 func (k *Client) Get(url string, query *url.Values) (*http.Response, error) {
-	return k.Do("GET", url, query, nil)
+	req := &Request{Method: "GET", Url: url, Query: query}
+	return k.Do(req)
 }
 
+// Delete Trigger HTTP DELETE
 func (k *Client) Delete(url string, query *url.Values) (*http.Response, error) {
-	return k.Do("DELETE", url, query, nil)
+	req := &Request{Method: "DELETE", Url: url, Query: query}
+	return k.Do(req)
 }
 
+// Post Trigger HTTP POST
 func (k *Client) Post(url string, query *url.Values, body io.Reader) (*http.Response, error) {
-	return k.Do("POST", url, query, body)
+	req := &Request{Method: "POST", Url: url, Query: query, Body: body}
+	return k.Do(req)
 }
 
+// PostForm Trigger HTTP POST form
+func (k *Client) PostForm(url string, query *url.Values, form *url.Values) (*http.Response, error) {
+	req := &Request{Method: "POST", Url: url, Query: query, Form: form}
+	return k.Do(req)
+}
+
+// Put Trigger HTTP PUT
 func (k *Client) Put(url string, query *url.Values, body io.Reader) (*http.Response, error) {
-	return k.Do("PUT", url, query, body)
+	req := &Request{Method: "PUT", Url: url, Query: query, Body: body}
+	return k.Do(req)
 }
 
-func NewNunuxKeeperClient(endpoint string) (*Client, error) {
+// NewAPIClient returns new API client instance
+func NewAPIClient(endpoint string) (*Client, error) {
 	_, err := url.Parse(endpoint)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid server endpoint %s: %s", endpoint, err)
 	}
 
-	creds, err := LoadTokenInfos()
-	if err != nil {
-		return nil, err
+	config := &Config{
+		Endpoint: endpoint,
 	}
 
-	config := &Config{
-		Endpoint:    endpoint,
-		Credentials: creds,
+	config.Credentials, err = LoadTokenInfos()
+	if err != nil {
+		return nil, err
 	}
 
 	return &Client{

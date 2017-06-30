@@ -54,7 +54,8 @@ func GetOfflineToken(tokenServiceUrl string, creds *Credentials) (*TokenInfos, e
 
 func GetAccessToken(config *Config) (string, error) {
 	if config.Credentials == nil {
-		return "", errors.New("No credentials. Please login first.")
+		// return "", errors.New("No credentials. Please login first.")
+		return "", nil
 	}
 	r, err := http.PostForm(config.Credentials.TokenService+"/token", url.Values{
 		"grant_type": {"refresh_token"},

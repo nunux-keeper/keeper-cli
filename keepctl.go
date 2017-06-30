@@ -18,11 +18,10 @@ import (
 	"os"
 
 	"github.com/nunux-keeper/keeper-cli/cmd"
-	cmdutil "github.com/nunux-keeper/keeper-cli/cmd/util"
 )
 
 func main() {
-	cmd := cmd.NewKeepctlCommand(cmdutil.NewFactory(), os.Stdin, os.Stdout, os.Stderr)
+	cmd := cmd.NewKeepctlCommand(os.Stdin, os.Stdout, os.Stderr)
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}

@@ -48,3 +48,16 @@ func (k *Client) DestroyDocument(docid string) error {
 	}
 	return nil
 }
+
+func (k *Client) DestroyLabel(id string) error {
+	res, err := k.Delete("/v2/graveyard/labels/"+id, nil)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode >= 400 {
+		io.Copy(os.Stderr, res.Body)
+		return errors.New(res.Status)
+	}
+	return nil
+}

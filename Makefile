@@ -1,14 +1,40 @@
-package = github.com/nunux-keeper/keeper-cli
-name = keepctl
+.SILENT :
+.PHONY : clean build
 
-.PHONY: release
+# Username
+USERNAME=nunux-keeper
 
+# App name
+APPNAME=keepctl
+
+# Base image
+BASEIMAGE=golang:1.8
+
+# Go configuration
+GOOS?=linux
+GOARCH?=amd64
+
+# Extract version infos
 VERSION:=`git describe --tags`
-LDFLAGS=-ldflags "-X github.com/ncarlier/keeper-cli/version.App=${VERSION}"
+LDFLAGS=-ldflags "-X github.com/nunux-keeper/keeper-cli/version.App=${VERSION}"
 
-release:
-	go get -v github.com/spf13/cobra/cobra
-	go get -v github.com/bgentry/speakeasy
+all: clean build
+
+# Include common Make tasks
+root_dir:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+makefiles:=$(root_dir)/makefiles
+include $(makefiles)/help.Makefile
+include $(makefiles)/docker.Makefile
+
+glide.lock:
+	glide install
+
+## Clean built files
+clean:
+	-rm -rf release
+
+## Build executable
+build: glide.lock
 	mkdir -p release
-	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o release/$(name)-linux-amd64 $(package)
-	GOOS=linux GOARCH=arm go build $(LDFLAGS) -o release/$(name)-linux-arm $(package)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go build $(LDFLAGS) -o release/$(APPNAME)-$(GOOS)-$(GOARCH)
+

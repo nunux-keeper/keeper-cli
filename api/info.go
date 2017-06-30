@@ -1,9 +1,6 @@
 package api
 
-import (
-	"encoding/json"
-	"net/http"
-)
+import "encoding/json"
 
 type Href struct {
 	Href string `json:href`
@@ -21,7 +18,7 @@ type ApiInfoResponse struct {
 }
 
 func (k *Client) GetApiInfo() (*ApiInfoResponse, error) {
-	r, err := http.Get(k.Config.Endpoint)
+	r, err := k.Get("/", nil)
 	if err != nil {
 		return nil, err
 	}
