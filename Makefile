@@ -1,9 +1,6 @@
 .SILENT :
 .PHONY : clean build
 
-# Username
-USERNAME=nunux-keeper
-
 # App name
 APPNAME=keepctl
 

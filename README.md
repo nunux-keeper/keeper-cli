@@ -28,7 +28,7 @@ Or download the binary regarding your architecture:
 Or use Docker:
 
 ```bash
-> docker run --rm -it nunux-keeper/keeperctl
+> docker run --rm -it ncarlier/keepctl
 ```
 
 Usage
