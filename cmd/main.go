@@ -16,7 +16,7 @@ var (
 	rootCmd = &cobra.Command{
 		Use:       "keepctl",
 		Short:     "Nunux Keeper v2 command-line interface",
-		Long:      `This CLI allow you to manage yours documents hoste on a Nunux Keeper instance.`,
+		Long:      `This CLI allow you to manage yours documents hosted on a Nunux Keeper instance.`,
 		ValidArgs: []string{"version", "login"},
 	}
 )
