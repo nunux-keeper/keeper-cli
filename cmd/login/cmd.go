@@ -15,7 +15,7 @@ type loginOptions struct {
 	passwordInteractive bool
 }
 
-func NewCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func NewCommand() *cobra.Command {
 	var opts loginOptions
 	cmd := &cobra.Command{
 		Use:   "login <uid>",
@@ -23,7 +23,7 @@ func NewCommand(kCli *cli.KeeperCLI) *cobra.Command {
 		Long: `Login to a Nunux Keeper instance.
 		If no server specified by the endpoint flag, the default is used.`,
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runLoginCommand(kCli, cc, &opts, args)
+			return runLoginCommand(cc, &opts, args)
 		},
 	}
 	flags := cmd.Flags()
@@ -32,7 +32,7 @@ func NewCommand(kCli *cli.KeeperCLI) *cobra.Command {
 	return cmd
 }
 
-func runLoginCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *loginOptions, args []string) error {
+func runLoginCommand(cmd *cobra.Command, opts *loginOptions, args []string) error {
 	if len(args) != 1 {
 		return errors.New("UID required")
 	}
@@ -50,7 +50,12 @@ func runLoginCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *loginOptions
 		}
 	}
 
-	infos, err := kCli.APIClient.Login(user, password)
+	kli, err := cli.NewKeeperCLI()
+	if err != nil {
+		return err
+	}
+
+	infos, err := kli.API.Login(user, password)
 	if err != nil {
 		return err
 	}
@@ -59,7 +64,7 @@ func runLoginCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *loginOptions
 		return err
 	}
 
-	fmt.Fprintf(*kCli.Out, "User %s logged.\n", user)
+	fmt.Printf("User %s logged.\n", user)
 	return nil
 }
 

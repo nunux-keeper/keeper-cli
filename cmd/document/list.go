@@ -2,9 +2,11 @@ package document
 
 import (
 	"fmt"
+	"os"
 	"text/tabwriter"
 
 	"github.com/nunux-keeper/keeper-cli/cli"
+	"github.com/nunux-keeper/keeper-cli/cmd/common"
 	"github.com/spf13/cobra"
 )
 
@@ -16,13 +18,13 @@ type listOptions struct {
 	from      int
 }
 
-func newListCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newListCommand() *cobra.Command {
 	var opts listOptions
 	cmd := &cobra.Command{
 		Use:   "ls",
 		Short: "List documents (by default), labels or trash content",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runListCommand(kCli, cc, &opts)
+			return runListCommand(cc, &opts)
 		},
 	}
 	flags := cmd.Flags()
@@ -34,20 +36,29 @@ func newListCommand(kCli *cli.KeeperCLI) *cobra.Command {
 	return cmd
 }
 
-func runListCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *listOptions) error {
+func runListCommand(cmd *cobra.Command, opts *listOptions) error {
+	kli, err := cli.NewKeeperCLI()
+	if err != nil {
+		return err
+	}
+
 	order := "desc"
 	if opts.inverted {
 		order = "asc"
 	}
 
-	documents, err := kCli.APIClient.GetDocuments(opts.query, order, opts.size, opts.from)
+	documents, err := kli.API.GetDocuments(opts.query, order, opts.size, opts.from)
 	if err != nil {
 		return err
 	}
 
+	if kli.JSON {
+		return common.WriteCmdJsonResponse(documents)
+	}
+
 	w := new(tabwriter.Writer)
 	// Format in tab-separated columns with a tab stop of 8.
-	w.Init(*kCli.Out, 0, 8, 1, '\t', 0)
+	w.Init(os.Stdout, 0, 8, 1, '\t', 0)
 	if !opts.noHeaders {
 		fmt.Fprintln(w, "#\tTitle\tContent-Type\tOrigin\tDate\t")
 	}

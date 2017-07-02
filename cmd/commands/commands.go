@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"github.com/nunux-keeper/keeper-cli/cli"
 	"github.com/nunux-keeper/keeper-cli/cmd/admin"
 	"github.com/nunux-keeper/keeper-cli/cmd/document"
 	"github.com/nunux-keeper/keeper-cli/cmd/label"
@@ -14,30 +13,30 @@ import (
 )
 
 // AddCommands adds all the commands from cli/command to the root command
-func AddCommands(cmd *cobra.Command, kCli *cli.KeeperCLI) {
+func AddCommands(cmd *cobra.Command) {
 	cmd.AddCommand(
 		// version
-		version.NewCommand(kCli),
+		version.NewCommand(),
 
 		// login
-		login.NewCommand(kCli),
+		login.NewCommand(),
 
 		// logout
-		logout.NewCommand(kCli),
+		logout.NewCommand(),
 
 		// profile
-		profile.NewCommand(kCli),
+		profile.NewCommand(),
 
 		// label
-		label.NewCommand(kCli),
+		label.NewCommand(),
 
 		// document
-		document.NewCommand(kCli),
+		document.NewCommand(),
 
 		// trash
-		trash.NewCommand(kCli),
+		trash.NewCommand(),
 
 		// admin
-		admin.NewCommand(kCli),
+		admin.NewCommand(),
 	)
 }

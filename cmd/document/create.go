@@ -19,13 +19,13 @@ type createOptions struct {
 	url     string
 }
 
-func newCreateCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newCreateCommand() *cobra.Command {
 	var opts createOptions
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a document",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runCreateCommand(kCli, cc, &opts)
+			return runCreateCommand(cc, &opts)
 		},
 	}
 
@@ -36,7 +36,12 @@ func newCreateCommand(kCli *cli.KeeperCLI) *cobra.Command {
 	return cmd
 }
 
-func runCreateCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *createOptions) error {
+func runCreateCommand(cmd *cobra.Command, opts *createOptions) error {
+	kli, err := cli.NewKeeperCLI()
+	if err != nil {
+		return err
+	}
+
 	var content string
 	fi, _ := os.Stdin.Stat()
 	if fi.Mode()&os.ModeNamedPipe == 0 {
@@ -57,9 +62,9 @@ func runCreateCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *createOptio
 		Content: content,
 		Origin:  opts.url,
 	}
-	document, err := kCli.APIClient.CreateDocument(doc)
+	resp, err := kli.API.CreateDocument(doc)
 	if err != nil {
 		return err
 	}
-	return common.WriteDocument(document, *kCli.Out)
+	return common.WriteCmdResponse(resp, common.DOCUMENT, kli.JSON)
 }

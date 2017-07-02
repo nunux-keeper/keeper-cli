@@ -3,6 +3,7 @@ package job
 import (
 	"errors"
 	"net/url"
+	"os"
 	"strings"
 	"text/template"
 
@@ -47,13 +48,13 @@ func (pf *paramsFlag) Get() url.Values {
 	return pf.params
 }
 
-func newCreateCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newCreateCommand() *cobra.Command {
 	var opts createJobOptions
 	cmd := &cobra.Command{
 		Use:   "create <name>",
 		Short: "Create a job",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runCreateCommand(kCli, cc, &opts, args)
+			return runCreateCommand(cc, &opts, args)
 		},
 	}
 
@@ -62,14 +63,19 @@ func newCreateCommand(kCli *cli.KeeperCLI) *cobra.Command {
 	return cmd
 }
 
-func runCreateCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *createJobOptions, args []string) error {
+func runCreateCommand(cmd *cobra.Command, opts *createJobOptions, args []string) error {
+	kli, err := cli.NewKeeperCLI()
+	if err != nil {
+		return err
+	}
+
 	if len(args) != 1 {
 		return errors.New("Name required")
 	}
 
 	name := args[0]
 
-	res, err := kCli.APIClient.CreateJob(name, opts.params.Get())
+	res, err := kli.API.CreateJob(name, opts.params.Get())
 	if err != nil {
 		return err
 	}
@@ -78,6 +84,6 @@ func runCreateCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *createJobOp
 	if err != nil {
 		return err
 	}
-	err = tmpl.Execute(*kCli.Out, res)
+	err = tmpl.Execute(os.Stdout, res)
 	return err
 }

@@ -1,25 +1,24 @@
 package document
 
 import (
-	"github.com/nunux-keeper/keeper-cli/cli"
 	"github.com/nunux-keeper/keeper-cli/cmd/common"
 	"github.com/spf13/cobra"
 )
 
-func NewCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "document",
 		Aliases: []string{"doc"},
 		Short:   "Manage documents",
-		RunE:    common.ShowHelp(*kCli.Out),
+		RunE:    common.ShowHelp(),
 	}
 	cmd.AddCommand(
-		newCreateCommand(kCli),
-		newGetCommand(kCli),
-		newListCommand(kCli),
-		newRemoveCommand(kCli),
-		newRestoreCommand(kCli),
-		newDestroyCommand(kCli),
+		newCreateCommand(),
+		newGetCommand(),
+		newListCommand(),
+		newRemoveCommand(),
+		newRestoreCommand(),
+		newDestroyCommand(),
 	)
 	return cmd
 }

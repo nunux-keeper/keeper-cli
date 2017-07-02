@@ -15,13 +15,13 @@ type createLabelOptions struct {
 	color string
 }
 
-func newCreateCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newCreateCommand() *cobra.Command {
 	var opts createLabelOptions
 	cmd := &cobra.Command{
 		Use:   "create",
 		Short: "Create a label",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runCreateCommand(kCli, cc, &opts)
+			return runCreateCommand(cc, &opts)
 		},
 	}
 
@@ -31,7 +31,7 @@ func newCreateCommand(kCli *cli.KeeperCLI) *cobra.Command {
 	return cmd
 }
 
-func runCreateCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *createLabelOptions) error {
+func runCreateCommand(cmd *cobra.Command, opts *createLabelOptions) error {
 	if opts.label == "" || opts.color == "" {
 		return errors.New("You have to specify at least a label and a color.")
 	}
@@ -40,9 +40,14 @@ func runCreateCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, opts *createLabel
 		Label: opts.label,
 		Color: opts.color,
 	}
-	label, err := kCli.APIClient.CreateLabel(lbl)
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	return common.WriteLabel(label, *kCli.Out)
+
+	resp, err := kli.API.CreateLabel(lbl)
+	if err != nil {
+		return err
+	}
+	return common.WriteCmdResponse(resp, common.LABEL, kli.JSON)
 }

@@ -6,21 +6,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "profile",
 		Short: "Get current user profile",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runProfileCommand(kCli, cc)
+			return runProfileCommand(cc)
 		},
 	}
 	return cmd
 }
 
-func runProfileCommand(kCli *cli.KeeperCLI, cmd *cobra.Command) error {
-	resp, err := kCli.APIClient.GetProfile()
+func runProfileCommand(cmd *cobra.Command) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	return common.WriteProfile(resp, *kCli.Out)
+
+	resp, err := kli.API.GetProfile()
+	if err != nil {
+		return err
+	}
+	return common.WriteCmdResponse(resp, common.PROFILE, kli.JSON)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newRemoveCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newRemoveCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "rm (ID)",
 		Short: "Remove a label",
@@ -17,16 +17,21 @@ func newRemoveCommand(kCli *cli.KeeperCLI) *cobra.Command {
 				return errors.New("Label ID required.")
 			}
 			docid := args[0]
-			return runRemoveCommand(kCli, cmd, docid)
+			return runRemoveCommand(cmd, docid)
 		},
 	}
 }
 
-func runRemoveCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, id string) error {
-	err := kCli.APIClient.RemoveLabel(id)
+func runRemoveCommand(cmd *cobra.Command, id string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(*kCli.Out, "Label removed.")
+
+	err = kli.API.RemoveLabel(id)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Label removed.")
 	return nil
 }

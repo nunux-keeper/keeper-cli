@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newRestoreCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newRestoreCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "restore (ID)",
 		Short: "Restore a deleted label",
@@ -18,15 +18,20 @@ func newRestoreCommand(kCli *cli.KeeperCLI) *cobra.Command {
 			}
 			docid := args[0]
 
-			return runRestoreCommand(kCli, cc, docid)
+			return runRestoreCommand(cc, docid)
 		},
 	}
 }
 
-func runRestoreCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, id string) error {
-	label, err := kCli.APIClient.RestoreLabel(id)
+func runRestoreCommand(cmd *cobra.Command, id string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	return common.WriteLabel(label, *kCli.Out)
+
+	resp, err := kli.API.RestoreLabel(id)
+	if err != nil {
+		return err
+	}
+	return common.WriteCmdResponse(resp, common.LABEL, kli.JSON)
 }

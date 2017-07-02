@@ -7,23 +7,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newEmptyCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newEmptyCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "empty",
 		Short: "Empty the trash",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runEmptyCommand(kCli, cc)
+			return runEmptyCommand(cc)
 		},
 	}
 	return cmd
 }
 
-func runEmptyCommand(kCli *cli.KeeperCLI, cmd *cobra.Command) error {
-	err := kCli.APIClient.EmptyGraveyard()
+func runEmptyCommand(cmd *cobra.Command) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
 
-	fmt.Fprintln(*kCli.Out, "Trash is empty.")
+	err = kli.API.EmptyGraveyard()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Trash is empty.")
 	return nil
 }

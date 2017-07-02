@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newGetCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newGetCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "get (ID)",
 		Short: "Get a label",
@@ -18,15 +18,20 @@ func newGetCommand(kCli *cli.KeeperCLI) *cobra.Command {
 			}
 			docid := args[0]
 
-			return runGetCommand(kCli, cc, docid)
+			return runGetCommand(cc, docid)
 		},
 	}
 }
 
-func runGetCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, id string) error {
-	label, err := kCli.APIClient.GetLabel(id)
+func runGetCommand(cmd *cobra.Command, id string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	return common.WriteLabel(label, *kCli.Out)
+
+	resp, err := kli.API.GetLabel(id)
+	if err != nil {
+		return err
+	}
+	return common.WriteCmdResponse(resp, common.LABEL, kli.JSON)
 }

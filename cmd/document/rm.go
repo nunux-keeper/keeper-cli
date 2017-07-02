@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newRemoveCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newRemoveCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "rm (ID)",
 		Short: "Remove a document",
@@ -17,16 +17,21 @@ func newRemoveCommand(kCli *cli.KeeperCLI) *cobra.Command {
 				return errors.New("Document ID required.")
 			}
 			docid := args[0]
-			return runRemoveCommand(kCli, cc, docid)
+			return runRemoveCommand(cc, docid)
 		},
 	}
 }
 
-func runRemoveCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, docid string) error {
-	err := kCli.APIClient.RemoveDocument(docid)
+func runRemoveCommand(cmd *cobra.Command, docid string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(*kCli.Out, "Document removed.")
+
+	err = kli.API.RemoveDocument(docid)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Document removed.")
 	return nil
 }

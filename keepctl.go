@@ -21,7 +21,6 @@ import (
 )
 
 func main() {
-	cmd := cmd.NewKeepctlCommand(os.Stdin, os.Stdout, os.Stderr)
 	if err := cmd.Execute(); err != nil {
 		os.Exit(1)
 	}

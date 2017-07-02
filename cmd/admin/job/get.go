@@ -2,25 +2,13 @@ package job
 
 import (
 	"errors"
-	"text/template"
 
 	"github.com/nunux-keeper/keeper-cli/cli"
+	"github.com/nunux-keeper/keeper-cli/cmd/common"
 	"github.com/spf13/cobra"
 )
 
-var JobDetailsTmpl = `Job:
- Id:         {{.Id}}
- Type:       {{.Type}}
- Priority:   {{.Priority}}
- Progress:   {{.Progress}}
- State:      {{.State}}
- Created at  {{.CreatedAt}}
- Updated at: {{.UpdatedAt}}
- Duration:   {{.Duration}}
- Params:     {{.Data}}
-`
-
-func newGetCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newGetCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "get <id>",
 		Short: "Get job details",
@@ -29,21 +17,19 @@ func newGetCommand(kCli *cli.KeeperCLI) *cobra.Command {
 				return errors.New("Job ID required.")
 			}
 			id := args[0]
-			return runGetCommand(kCli, cc, id)
+			return runGetCommand(cc, id)
 		},
 	}
 }
 
-func runGetCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, id string) error {
-	res, err := kCli.APIClient.GetJob(id)
+func runGetCommand(cmd *cobra.Command, id string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-
-	tmpl, err := template.New("jobDetails").Parse(JobDetailsTmpl)
+	resp, err := kli.API.GetJob(id)
 	if err != nil {
 		return err
 	}
-	err = tmpl.Execute(*kCli.Out, res)
-	return err
+	return common.WriteCmdResponse(resp, common.JOB, kli.JSON)
 }

@@ -13,7 +13,7 @@ func SaveTokenInfos(infos *TokenInfos) error {
 	if err != nil {
 		return err
 	}
-	dir := path.Join(usr.HomeDir, ".keeper")
+	dir := path.Join(usr.HomeDir, ".keepctl")
 	if _, err := os.Stat(dir); err != nil {
 		if os.IsNotExist(err) {
 			os.Mkdir(dir, 0755)
@@ -38,7 +38,7 @@ func LoadTokenInfos() (*TokenInfos, error) {
 	if err != nil {
 		return nil, err
 	}
-	filename := path.Join(usr.HomeDir, ".keeper", "creds.json")
+	filename := path.Join(usr.HomeDir, ".keepctl", "creds.json")
 
 	if _, err := os.Stat(filename); err == nil {
 		file, e := ioutil.ReadFile(filename)
@@ -57,7 +57,7 @@ func RemoveTokenInfos() error {
 	if err != nil {
 		return err
 	}
-	filename := path.Join(usr.HomeDir, ".keeper", "creds.json")
+	filename := path.Join(usr.HomeDir, ".keepctl", "creds.json")
 	if _, err := os.Stat(filename); err == nil {
 		return os.Remove(filename)
 	}

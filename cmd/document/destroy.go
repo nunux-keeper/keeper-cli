@@ -9,7 +9,7 @@ import (
 	"github.com/nunux-keeper/keeper-cli/cli"
 )
 
-func newDestroyCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newDestroyCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "destroy (ID)",
 		Short: "Remove a document from the trash",
@@ -18,16 +18,21 @@ func newDestroyCommand(kCli *cli.KeeperCLI) *cobra.Command {
 				return errors.New("Document ID required.")
 			}
 			docid := args[0]
-			return runDestroyCommand(kCli, cc, docid)
+			return runDestroyCommand(cc, docid)
 		},
 	}
 }
 
-func runDestroyCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, docid string) error {
-	err := kCli.APIClient.DestroyDocument(docid)
+func runDestroyCommand(cmd *cobra.Command, docid string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(*kCli.Out, "Document destroyed.")
+
+	err = kli.API.DestroyDocument(docid)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Document destroyed.")
 	return nil
 }

@@ -1,40 +1,30 @@
 package job
 
 import (
-	"html/template"
-
 	"github.com/nunux-keeper/keeper-cli/cli"
+	"github.com/nunux-keeper/keeper-cli/cmd/common"
 	"github.com/spf13/cobra"
 )
 
-var jobsInfosTmpl = `Jobs informations:
- Nb. inactive  {{.InactiveCount}}
- Nb. complete  {{.CompleteCount}}
- Nb. active    {{.ActiveCount}}
- Nb. failed    {{.FailedCount}}
- Work time     {{.WorkTime}}
-`
-
-func newInfoCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newInfoCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "info",
 		Short: "Get jobs informations",
 		RunE: func(cc *cobra.Command, args []string) error {
-			return runInfoCommand(kCli, cc)
+			return runInfoCommand(cc)
 		},
 	}
 }
 
-func runInfoCommand(kCli *cli.KeeperCLI, cmd *cobra.Command) error {
-	resp, err := kCli.APIClient.GetJobsInfos()
+func runInfoCommand(cmd *cobra.Command) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
 
-	tmpl, err := template.New("jobsInfos").Parse(jobsInfosTmpl)
+	resp, err := kli.API.GetJobsInfos()
 	if err != nil {
 		return err
 	}
-	err = tmpl.Execute(*kCli.Out, resp)
-	return err
+	return common.WriteCmdResponse(resp, common.JOBS_INFO, kli.JSON)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newRestoreCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newRestoreCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "restore (ID)",
 		Short: "Restore a deleted document",
@@ -17,15 +17,20 @@ func newRestoreCommand(kCli *cli.KeeperCLI) *cobra.Command {
 				return errors.New("Document ID required.")
 			}
 			docid := args[0]
-			return runRestoreCommand(kCli, cc, docid)
+			return runRestoreCommand(cc, docid)
 		},
 	}
 }
 
-func runRestoreCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, docid string) error {
-	document, err := kCli.APIClient.RestoreDocument(docid)
+func runRestoreCommand(cmd *cobra.Command, docid string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	return common.WriteDocument(document, *kCli.Out)
+
+	resp, err := kli.API.RestoreDocument(docid)
+	if err != nil {
+		return err
+	}
+	return common.WriteCmdResponse(resp, common.DOCUMENT, kli.JSON)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/nunux-keeper/keeper-cli/cli"
 )
 
-func newDestroyCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func newDestroyCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "destroy (ID)",
 		Short: "Remove a label from the trash",
@@ -18,16 +18,21 @@ func newDestroyCommand(kCli *cli.KeeperCLI) *cobra.Command {
 				return errors.New("Label ID required.")
 			}
 			docid := args[0]
-			return runDestroyCommand(kCli, cc, docid)
+			return runDestroyCommand(cc, docid)
 		},
 	}
 }
 
-func runDestroyCommand(kCli *cli.KeeperCLI, cmd *cobra.Command, id string) error {
-	err := kCli.APIClient.DestroyLabel(id)
+func runDestroyCommand(cmd *cobra.Command, id string) error {
+	kli, err := cli.NewKeeperCLI()
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(*kCli.Out, "Label destroyed.")
+
+	err = kli.API.DestroyLabel(id)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Label destroyed.")
 	return nil
 }

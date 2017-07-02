@@ -9,14 +9,14 @@ import (
 )
 
 type UserResponse struct {
-	Id           string `json:"id,omitempty"`
-	Uid          string `json:"uid,omitempty"`
-	Name         string `json:"name,omitempty"`
-	Date         string `json:"date,omitempty"`
-	NbDocuments  int    `json:nbDocuments",omitempty"`
-	NbLabels     int    `json:nbLabels",omitempty"`
-	NbSharing    int    `json:nbSharing",omitempty"`
-	StorageUsage int    `json:storageUsage",omitempty"`
+	Id           string `json:"id"`
+	Uid          string `json:"uid"`
+	Name         string `json:"name"`
+	Date         string `json:"date"`
+	NbDocuments  int    `json:"nbDocuments"`
+	NbLabels     int    `json:"nbLabels"`
+	NbSharing    int    `json:"nbSharing"`
+	StorageUsage int    `json:"storageUsage"`
 }
 
 type ServerInfosResponse struct {
@@ -25,23 +25,23 @@ type ServerInfosResponse struct {
 }
 
 type JobsInfosResponse struct {
-	InactiveCount int `json:"inactiveCount,omitempty"`
-	CompleteCount int `json:"completeCount,omitempty"`
-	ActiveCount   int `json:"activeCount,omitempty"`
-	FailedCount   int `json:"failedCount,omitempty"`
-	WorkTime      int `json:"workTime,omitempty"`
+	InactiveCount int `json:"inactiveCount"`
+	CompleteCount int `json:"completeCount"`
+	ActiveCount   int `json:"activeCount"`
+	FailedCount   int `json:"failedCount"`
+	WorkTime      int `json:"workTime"`
 }
 
 type JobResponse struct {
-	Id        string      `json:"id,omitempty"`
-	Type      string      `json:"type",omitempty`
-	Data      interface{} `json:"data",omitempty`
-	Priority  int         `json:"priority",omitempty`
-	Progress  string      `json:"progress",omitempty`
-	State     string      `json:"state",omitempty`
-	CreatedAt string      `json:"created_at",omitempty`
-	UpdatedAt string      `json:"updated_at",omitempty`
-	Duration  string      `json:"duration",omitempty`
+	Id        string      `json:"id"`
+	Type      string      `json:"type"`
+	Data      interface{} `json:"data"`
+	Priority  int         `json:"priority"`
+	Progress  string      `json:"progress"`
+	State     string      `json:"state"`
+	CreatedAt string      `json:"created_at"`
+	UpdatedAt string      `json:"updated_at"`
+	Duration  string      `json:"duration"`
 }
 
 func (k *Client) GetServerInfos() (*ServerInfosResponse, error) {

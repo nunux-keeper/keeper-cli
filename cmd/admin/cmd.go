@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"github.com/nunux-keeper/keeper-cli/cli"
 	"github.com/nunux-keeper/keeper-cli/cmd/admin/info"
 	"github.com/nunux-keeper/keeper-cli/cmd/admin/job"
 	"github.com/nunux-keeper/keeper-cli/cmd/admin/user"
@@ -9,16 +8,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCommand(kCli *cli.KeeperCLI) *cobra.Command {
+func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "admin",
 		Short: "Admin commands",
-		RunE:  common.ShowHelp(*kCli.Out),
+		RunE:  common.ShowHelp(),
 	}
 	cmd.AddCommand(
-		info.NewCommand(kCli),
-		job.NewCommand(kCli),
-		user.NewCommand(kCli),
+		info.NewCommand(),
+		job.NewCommand(),
+		user.NewCommand(),
 	)
 	return cmd
 }

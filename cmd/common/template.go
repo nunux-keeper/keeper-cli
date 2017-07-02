@@ -1,20 +1,35 @@
 package common
 
 import (
-	"html/template"
-	"io"
-
-	"github.com/nunux-keeper/keeper-cli/api"
+	"encoding/json"
+	"os"
+	"text/template"
 )
 
-var profileTmpl = `Profile:
+const VERSION = `Client:
+ Version:      {{.Client.Version}}
+ API version:  {{.Client.APIVersion}}
+ Go version:   {{.Client.GoVersion}}
+ OS/Arch:      {{.Client.Os}}/{{.Client.Arch}}
+
+Server:
+ Version:      {{.Server.Version}}
+ API version:  {{.Server.APIVersion}}
+`
+
+var SERVER_INFOS = `Server informations:
+ Nb. users     {{.NbUsers}}
+ Nb. documents {{.NbDocuments}}
+`
+
+var PROFILE = `Profile:
  UID:   {{.Uid}}
  Name:  {{.Name}}
  Date:  {{.Date}}
  Admin: {{.Admin}}
 `
 
-var documentTmpl = `Document:
+var DOCUMENT = `Document:
  Id:          {{.Id}}
  Title:       {{.Title}}
  ContentType: {{.ContentType}}
@@ -24,7 +39,7 @@ var documentTmpl = `Document:
  Ghost:       {{.Ghost}}
 `
 
-var labelTmpl = `Label:
+var LABEL = `Label:
  Id:    {{.Id}}
  Label: {{.Label}}
  Color: {{.Color}}
@@ -32,26 +47,48 @@ var labelTmpl = `Label:
  Ghost: {{.Ghost}}
 `
 
-func WriteProfile(profile *api.ProfileResponse, out io.Writer) error {
-	tmpl, err := template.New("profile").Parse(profileTmpl)
+var USER = `User:
+ Id:            {{.Id}}
+ UID:           {{.Uid}}
+ Name:          {{.Name}}
+ Date:          {{.Date}}
+ Nb. documents: {{.NbDocuments}}
+ Nb. labels:    {{.NbLabels}}
+ Nb. sharing:   {{.NbSharing}}
+ Storage usage: {{.StorageUsage}}
+`
+
+var JOBS_INFO = `Jobs informations:
+ Nb. inactive  {{.InactiveCount}}
+ Nb. complete  {{.CompleteCount}}
+ Nb. active    {{.ActiveCount}}
+ Nb. failed    {{.FailedCount}}
+ Work time     {{.WorkTime}}
+`
+
+var JOB = `Job:
+ Id:         {{.Id}}
+ Type:       {{.Type}}
+ Priority:   {{.Priority}}
+ Progress:   {{.Progress}}
+ State:      {{.State}}
+ Created at  {{.CreatedAt}}
+ Updated at: {{.UpdatedAt}}
+ Duration:   {{.Duration}}
+ Params:     {{.Data}}
+`
+
+func WriteCmdResponse(v interface{}, tmpl string, outputAsJson bool) error {
+	if outputAsJson {
+		return WriteCmdJsonResponse(v)
+	}
+	t, err := template.New("").Parse(tmpl)
 	if err != nil {
 		return err
 	}
-	return tmpl.Execute(out, profile)
+	return t.Execute(os.Stdout, v)
 }
 
-func WriteDocument(doc *api.DocumentResponse, out io.Writer) error {
-	tmpl, err := template.New("document").Parse(documentTmpl)
-	if err != nil {
-		return err
-	}
-	return tmpl.Execute(out, doc)
-}
-
-func WriteLabel(label *api.LabelResponse, out io.Writer) error {
-	tmpl, err := template.New("label").Parse(labelTmpl)
-	if err != nil {
-		return err
-	}
-	return tmpl.Execute(out, label)
+func WriteCmdJsonResponse(v interface{}) error {
+	return json.NewEncoder(os.Stdout).Encode(v)
 }
