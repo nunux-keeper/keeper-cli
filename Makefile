@@ -14,11 +14,15 @@ BASEIMAGE=golang:1.8
 GOOS?=linux
 GOARCH?=amd64
 
+# Add exe extension if windows target
+is_windows:=$(filter windows,$(GOOS))
+EXT:=$(if $(is_windows),".exe","")
+
 # Extract version infos
 VERSION:=`git describe --tags`
 LDFLAGS=-ldflags "-X github.com/nunux-keeper/keeper-cli/version.App=${VERSION}"
 
-all: clean build
+all: build
 
 # Include common Make tasks
 root_dir:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -36,5 +40,6 @@ clean:
 ## Build executable
 build: glide.lock
 	mkdir -p release
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build $(LDFLAGS) -o release/$(APPNAME)-$(GOOS)-$(GOARCH)
+	echo "Building: release/$(APPNAME)-$(GOOS)-$(GOARCH)$(EXT) ..."
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go build $(LDFLAGS) -o release/$(APPNAME)-$(GOOS)-$(GOARCH)$(EXT)
 
