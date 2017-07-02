@@ -2,10 +2,8 @@
 
 - Full feature document command:
   - Update a document
-  - Output as JSON
   - Create with content-type
   - Create by upload file
-  - Filter listed attributes
 - Full feature attachment command
   - List/Upload/Remove/Get attachment
 - Create MAN: https://github.com/spf13/cobra/blob/master/doc/man_docs.md
