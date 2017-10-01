@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"net/url"
 	"os"
 )
 
@@ -30,6 +29,11 @@ type JobsInfosResponse struct {
 	ActiveCount   int `json:"activeCount"`
 	FailedCount   int `json:"failedCount"`
 	WorkTime      int `json:"workTime"`
+}
+
+type JobRequest struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
 }
 
 type JobResponse struct {
@@ -93,7 +97,7 @@ func (k *Client) GetUser(uid string) (*UserResponse, error) {
 }
 
 func (k *Client) GetJobsInfos() (*JobsInfosResponse, error) {
-	res, err := k.Get("/v2/admin/kue/stats", nil)
+	res, err := k.Get("/v2/admin/worker/stats", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -108,8 +112,8 @@ func (k *Client) GetJobsInfos() (*JobsInfosResponse, error) {
 	return &result, err
 }
 
-func (k *Client) CreateJob(name string, params url.Values) (*JobResponse, error) {
-	res, err := k.Post("/v2/admin/jobs/"+name, &params, nil)
+func (k *Client) CreateJob(job *JobRequest) (*JobResponse, error) {
+	res, err := k.Post("/v2/admin/worker/job", &job, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +129,7 @@ func (k *Client) CreateJob(name string, params url.Values) (*JobResponse, error)
 }
 
 func (k *Client) GetJob(id string) (*JobResponse, error) {
-	res, err := k.Get("/v2/admin/kue/job/"+id, nil)
+	res, err := k.Get("/v2/admin/worker/job/"+id, nil)
 	if err != nil {
 		return nil, err
 	}
