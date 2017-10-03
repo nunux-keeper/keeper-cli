@@ -6,6 +6,7 @@ import (
 	"text/template"
 )
 
+// VERSION Version output
 const VERSION = `Client:
  Version:      {{.Client.Version}}
  API version:  {{.Client.APIVersion}}
@@ -17,11 +18,13 @@ Server:
  API version:  {{.Server.APIVersion}}
 `
 
+// SERVER_INFOS Server infos output
 var SERVER_INFOS = `Server informations:
  Nb. users     {{.NbUsers}}
  Nb. documents {{.NbDocuments}}
 `
 
+// PROFILE Profile output
 var PROFILE = `Profile:
  UID:   {{.Uid}}
  Name:  {{.Name}}
@@ -29,6 +32,7 @@ var PROFILE = `Profile:
  Admin: {{.Admin}}
 `
 
+// DOCUMENT Document output
 var DOCUMENT = `Document:
  Id:          {{.Id}}
  Title:       {{.Title}}
@@ -39,6 +43,7 @@ var DOCUMENT = `Document:
  Ghost:       {{.Ghost}}
 `
 
+// LABEL Label output
 var LABEL = `Label:
  Id:    {{.Id}}
  Label: {{.Label}}
@@ -47,6 +52,7 @@ var LABEL = `Label:
  Ghost: {{.Ghost}}
 `
 
+// USER User output
 var USER = `User:
  Id:            {{.Id}}
  UID:           {{.Uid}}
@@ -58,6 +64,7 @@ var USER = `User:
  Storage usage: {{.StorageUsage}}
 `
 
+// JOBS_INFO Job infos output
 var JOBS_INFO = `Jobs informations:
  Nb. inactive  {{.InactiveCount}}
  Nb. complete  {{.CompleteCount}}
@@ -66,6 +73,7 @@ var JOBS_INFO = `Jobs informations:
  Work time     {{.WorkTime}}
 `
 
+// JOB Job details output
 var JOB = `Job:
  Id:         {{.Id}}
  Type:       {{.Type}}
@@ -78,9 +86,21 @@ var JOB = `Job:
  Params:     {{.Data}}
 `
 
-func WriteCmdResponse(v interface{}, tmpl string, outputAsJson bool) error {
-	if outputAsJson {
-		return WriteCmdJsonResponse(v)
+// WEBHOOK Webhook details output
+var WEBHOOK = `Webhook:
+ Id:    {{.ID}}
+ URL:   {{.URL}}
+ Secret: {{.Secret}}
+ Labels: {{.Labels}}
+ Events: {{.Events}}
+ Creation date:  {{.CreationDate}}
+ Modification date:  {{.ModificationDate}}
+`
+
+// WriteCmdResponse Write command response as readable text
+func WriteCmdResponse(v interface{}, tmpl string, outputAsJSON bool) error {
+	if outputAsJSON {
+		return WriteCmdJSONResponse(v)
 	}
 	t, err := template.New("").Parse(tmpl)
 	if err != nil {
@@ -89,6 +109,7 @@ func WriteCmdResponse(v interface{}, tmpl string, outputAsJson bool) error {
 	return t.Execute(os.Stdout, v)
 }
 
-func WriteCmdJsonResponse(v interface{}) error {
+// WriteCmdJSONResponse Write command response as JSON output
+func WriteCmdJSONResponse(v interface{}) error {
 	return json.NewEncoder(os.Stdout).Encode(v)
 }
