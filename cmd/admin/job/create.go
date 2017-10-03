@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/nunux-keeper/keeper-cli/api"
 	"github.com/nunux-keeper/keeper-cli/cli"
 )
 
@@ -73,9 +74,12 @@ func runCreateCommand(cmd *cobra.Command, opts *createJobOptions, args []string)
 		return errors.New("Name required")
 	}
 
-	name := args[0]
+	job := &api.JobRequest{
+		Type: args[0],
+		Data: opts.params.Get(),
+	}
 
-	res, err := kli.API.CreateJob(name, opts.params.Get())
+	res, err := kli.API.CreateJob(job)
 	if err != nil {
 		return err
 	}
