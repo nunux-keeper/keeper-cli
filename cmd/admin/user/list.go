@@ -32,7 +32,7 @@ func runListCommand(cmd *cobra.Command) error {
 	}
 
 	if kli.JSON {
-		return common.WriteCmdJsonResponse(users)
+		return common.WriteCmdJSONResponse(users)
 	}
 
 	w := new(tabwriter.Writer)

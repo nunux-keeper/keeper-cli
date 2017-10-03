@@ -53,7 +53,7 @@ func runListCommand(cmd *cobra.Command, opts *listOptions) error {
 	}
 
 	if kli.JSON {
-		return common.WriteCmdJsonResponse(documents)
+		return common.WriteCmdJSONResponse(documents)
 	}
 
 	w := new(tabwriter.Writer)
