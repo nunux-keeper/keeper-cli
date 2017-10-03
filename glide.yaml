@@ -4,3 +4,4 @@ import:
   version: ^0.1.0
 - package: github.com/spf13/cobra
 - package: github.com/spf13/viper
+- package: gopkg.in/cheggaaa/pb.v1

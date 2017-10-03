@@ -3,12 +3,14 @@ package commands
 import (
 	"github.com/nunux-keeper/keeper-cli/cmd/admin"
 	"github.com/nunux-keeper/keeper-cli/cmd/document"
+	"github.com/nunux-keeper/keeper-cli/cmd/export"
 	"github.com/nunux-keeper/keeper-cli/cmd/label"
 	"github.com/nunux-keeper/keeper-cli/cmd/login"
 	"github.com/nunux-keeper/keeper-cli/cmd/logout"
 	"github.com/nunux-keeper/keeper-cli/cmd/profile"
 	"github.com/nunux-keeper/keeper-cli/cmd/trash"
 	"github.com/nunux-keeper/keeper-cli/cmd/version"
+	"github.com/nunux-keeper/keeper-cli/cmd/webhook"
 	"github.com/spf13/cobra"
 )
 
@@ -35,6 +37,12 @@ func AddCommands(cmd *cobra.Command) {
 
 		// trash
 		trash.NewCommand(),
+
+		// export
+		export.NewCommand(),
+
+		// webhook
+		webhook.NewCommand(),
 
 		// admin
 		admin.NewCommand(),
