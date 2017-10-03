@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -113,7 +114,10 @@ func (k *Client) GetJobsInfos() (*JobsInfosResponse, error) {
 }
 
 func (k *Client) CreateJob(job *JobRequest) (*JobResponse, error) {
-	res, err := k.Post("/v2/admin/worker/job", &job, nil)
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(job)
+
+	res, err := k.Post("/v2/admin/worker/job", nil, b)
 	if err != nil {
 		return nil, err
 	}
