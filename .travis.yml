@@ -7,6 +7,7 @@ deploy:
     secure: 5QO9L/1713lJC6FqR0R45oBM/hJyJSgHnoI7svjGF5AzjWhRl3OfAc5ZwyZRXBWIu+WCn470qxkNN/PPJyPAnNjiVqmN1kE5JJAZfpFIc/9vAhqJIIoT1DGIICmQ0pO2BXASRxwx9XC9rhqKZqAZ5OiPQQiijYUmCw/E7E35B3COvbLKMc/79O50Wx7JMU6+x/swbbcg2PCR/8TTZQ9iiLEXf9xlNckalpEsi/s/0uJ4lub8YzF4n1O51bXIxqYwwxM4vFwm/KjHXMOe82TG8Um2kWRAcMQBhX5x/pVcMwThpuUjqK/2gRSklazQv3EemEDltNBUsSl/VOKYAce9/ROnA9Uf11yrp8iWg3rtIWbDjLLzB9eGof2hmcwVgcWMryeQfGdmuUw6Jh2uGnDIxkXp1Z3+rSlWVFjzKsSHtKCcAK4BpwmL0mhWQH2WRu/Tm1IoTw6AP5W+DhmyoNuXsyGTkT9s/aKqAodQ3BPCgGyxm6hSFWcib2Ecf5WCJ17i0pqI75/5vX+mW9hRFu1Vhx11lADUpx4ips6BHKd6V4272kMglaFCDNN5MFlcUXaKqh3NxoFP20g8ZAUdIIg46aoqN6w6ohL5VLcn/FoZK7WWkOF06HSXTgX+90A7XN9gablh7deVMUJMi6lrwInPOP/dI5TKvUAFWlSPlWDGrhs=
   file:
     - release/keepctl-linux-amd64
+  skip_cleanup: true
   on:
     repo: nunux-keeper/keeper-cli
     tags: true
